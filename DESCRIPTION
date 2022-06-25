@@ -1,0 +1,27 @@
+Package: ReX
+Title: Reliability Explorer 
+Description: Calculating and comparing the individual variation and reliability using 
+              univariate and multivariate models including Intraclass Correlation (ICC), 
+              distance-based ICC (dbICC), discriminability, and fingerprinting (identification rate).
+Version: 1.0.0
+Date: 2022-06-01
+Author: Ting Xu <tingsterx@gmail.com>
+Maintainer: Ting Xu <tingsterx@gmail.com>
+Depends: R (>= 4.1.0)
+License: GPL (>= 2)
+Imports:
+    dplyr,
+    lme4,
+    ggplot2,
+    RColorBrewer,
+    scales,
+    stats,
+    reshape2,
+    colorspace,
+    I2C2,
+    shinybusy
+Remotes: neuroconductor/I2C2
+Encoding: UTF-8
+BugReports: https://github.com/TingsterX/reliability/issues
+LazyData: true
+RoxygenNote: 7.2.0
