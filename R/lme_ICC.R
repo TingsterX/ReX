@@ -10,7 +10,7 @@
 #' @param data [n, p]: a data matrix for n observations and p variables.
 #' @param subID [n]: a vector containing the subject IDs for each subject.
 #' @param session [n]: a vector containing the session (run, subsets, site, etc.)
-#' @param cov [n, m]: a covariance matrix for n observations and m variables
+#' @param cov [n, m]: a covariance matrix for n observations and m variables (default: NULL). 
 #' @param shiny_progress_bar [1] a Boolean value - show the Shiny progress bar if this function is called in shiny app (library(shinybusy) is required)
 #' @return ICC: output vector contains the following elements:
 #' 
@@ -29,7 +29,7 @@
 #' @references A Guide for Quantifying and Optimizing Measurement Reliability for the Study of Individual Differences. doi: https://doi.org/10.1101/2022.01.27.478100
 #' @author Ting Xu
 #' @export
-lme_ICC_1wayR <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
+lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
   
   n <- dim(data)[1]
   p <- dim(data)[2]
@@ -37,6 +37,7 @@ lme_ICC_1wayR <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
   if (is.null((session)) || is.null((subID)) || n!=length(subID) || n!=length(session)) {
     stop('Invalid Input')
   }
+  if (is.null(cov)){cov <- data.frame(matrix("", nrow=n, ncol=0))}
   
   smodel <- "y ~ 1 + (1|subID)"
   for (a in colnames(cov)) smodel <- sprintf("%s + %s", smodel, a)
@@ -121,7 +122,7 @@ lme_ICC_1wayR <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
 #' @author Ting Xu
 #' @export
 #' 
-lme_ICC_2wayR <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
+lme_ICC_2wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
   
   n <- dim(data)[1]
   p <- dim(data)[2]
@@ -129,6 +130,7 @@ lme_ICC_2wayR <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
   if (is.null((session)) || is.null((subID)) || n!=length(subID) || n!=length(session)) {
     stop('Invalid Input')
   }
+  if (is.null(cov)){cov <- data.frame(matrix("", nrow=n, ncol=0))}
   
   ICC <- array(0, dim=c(p,9))
   colnames(ICC) <- c("ICC.a", "ICC.c", "ICCk.a", "ICCk.c", 
@@ -210,7 +212,7 @@ lme_ICC_2wayR <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
 #' @author Ting Xu
 #' @export
 #' 
-lme_ICC_2wayM <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
+lme_ICC_2wayM <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
   
   n <- dim(data)[1]
   p <- dim(data)[2]
@@ -218,6 +220,7 @@ lme_ICC_2wayM <- function(data, subID, session, cov, shiny_progress_bar=FALSE) {
   if (is.null((session)) || is.null((subID)) || n!=length(subID) || n!=length(session)) {
     stop('Invalid Input')
   }
+  if (is.null(cov)){cov <- data.frame(matrix("", nrow=n, ncol=0))}
   
   ICC <- array(0, dim=c(p,6))
   colnames(ICC) <- c("ICC.c", "ICCk.c", 
