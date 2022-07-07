@@ -31,7 +31,6 @@ rex_plot.icc.gradient.hist(
 }
 \value{
 ggplot plot object
-import dplyr
 }
 \description{
 histgram of the ICC gradient (x-axis: relative change of the within-individual variation, y-axis: relative change of the between-individual variation).

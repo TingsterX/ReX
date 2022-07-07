@@ -591,7 +591,7 @@ rex_plot.icc.gradient.norm <- function(df.plot, plot.title=NULL,
 #' @note If plot.point=TRUE, the bin plot is disabled.
 #' 
 #' @return ggplot plot object
-#' import dplyr
+#' @import dplyr
 #' @references A Guide for Quantifying and Optimizing Measurement Reliability for the Study of Individual Differences. doi: https://doi.org/10.1101/2022.01.27.478100
 #' 
 #' @author Ting Xu
