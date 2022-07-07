@@ -4,7 +4,7 @@
 \alias{lme_ICC_2wayR}
 \title{ICC (ICC2) calculation using 2-way Random model}
 \usage{
-lme_ICC_2wayR(data, subID, session, cov, shiny_progress_bar = FALSE)
+lme_ICC_2wayR(data, subID, session, cov = NULL, shiny_progress_bar = FALSE)
 }
 \arguments{
 \item{data}{[n, p]: a data matrix for n observations and p variables.}

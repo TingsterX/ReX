@@ -112,12 +112,12 @@ discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean",
   if ( is.null((sID[,1])) || n!=length(sID[,1]) ) {
     stop('Invalid Input')
   }
-  df.discr <- array(0, dim=c(p,1))
+  df.discr <- data.frame(array(0, dim=c(p,1)))
   colnames(df.discr) <- "discriminability"
   rownames(df.discr) <- colnames(data)
   
   if (all_discr.return){
-    df.discr_sub <- array(0, dim=c(n,p))
+    df.discr_sub <- data.frame(array(0, dim=c(n,p)))
     colnames(df.discr_sub) <- colnames(data)
     df.rep <- cbind(sID, visit)
   }
@@ -180,7 +180,7 @@ fingerprinting_wraper <- function(data, sID, visit, method.dist = "euclidean", m
     stop('Invalid Input')
   }
   
-  df.FP <- array(0, dim=c(p,1))
+  df.FP <- data.frame(array(0, dim=c(p,1)))
   colnames(df.FP) <- "fingerprinting"
   rownames(df.FP) <- colnames(data)
 
@@ -236,15 +236,15 @@ Discr_and_FP_wraper <- function(data, sID, visit, method.dist = "euclidean", all
   if ( is.null((sID[,1])) || n!=length(sID[,1]) ) {
     stop('Invalid Input')
   }
-  df.discr <- array(0, dim=c(p,1))
+  df.discr <- data.frame(array(0, dim=c(p,1)))
   colnames(df.discr) <- "discriminability"
   rownames(df.discr) <- colnames(data)
-  df.FP <- array(0, dim=c(p,1))
+  df.FP <- data.frame(array(0, dim=c(p,1)))
   colnames(df.FP) <- "fingerprinting"
   rownames(df.FP) <- colnames(data)
   
   if (all_discr.return){
-    df.discr_sub <- array(0, dim=c(n,p))
+    df.discr_sub <- data.frame(array(0, dim=c(n,p)))
     colnames(df.discr_sub) <- colnames(data)
     df.rep <- cbind(sID, visit)
   }

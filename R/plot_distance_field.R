@@ -2,6 +2,39 @@
 # function for visualization the distance field
 # ----------------------------------------------------------------------------------
 
+#' plot Discriminability for all observation and variables
+#'
+#' plot Discriminability for all observation and variables - ggplot based
+#' 
+#' @param DiscrSub [n x p] Discriminability for each observation and variable(s)
+#' @param subID [n] a vector for subject ID, row should match the Discriminability input
+#' @param rep [n] a vector for repetition, row should match the Discriminability input
+#' @param gtitle plot title (default: NULL)
+#' @param cmap palette name from ColorBrewer, or a color array, e.g. c("blue", "red"). By default, color=c("white", "red)
+#'              Check out the what color palette available
+#'              \code{library(ColorBrewer); display.brewer.all()}
+#' 
+#' @return ggplot object of the distance matrix 
+#' @import ggplot2
+#' @importFrom reshape2 melt
+#' @references A Guide for Quantifying and Optimizing Measurement Reliability for the Study of Individual Differences. doi: https://doi.org/10.1101/2022.01.27.478100
+#' @author Ting XU
+#' @export
+rex_plot.discri_matrix <- function(DiscrSub, subID, rep, gtitle='', cmap=c("white", "blue")){
+  
+  data <- reshape2::melt(as.matrix(DiscrSub), c("x", "y"), value.name = "discriminability")
+  data$x <- paste0(subID, ".", rep)
+  p <- ggplot(data = data, aes(x=.data$y, y=.data$x, fill=.data$discriminability)) + 
+    geom_tile() +
+    scale_fill_gradientn(colors=cmap, limits = c(0,1)) +
+    xlab("variables selected") + ylab("subject.repetition") + 
+    scale_y_discrete(limits=rev) +
+    theme(text = element_text(size=5),
+          axis.text.y = element_text(angle=0),
+          axis.text.x = element_text(angle = 90, hjust = 1))
+  return(p)
+} # ----------------------------------------------------------------------------------
+
 #' plot distance matrix 
 #'
 #' plot distance matrix - ggplot based
@@ -87,7 +120,7 @@ rex_plot.sub_distance <- function(Dmax, subID, visit, gtitle='') {
 #' plot distance field map (x-axis: within-individual distance, y-axis: between-distance distance)
 #' 
 #' @param dFM.df a datafrmae containing variables: distance, wD, bD
-#' @param ptype plot options: 'Discr', 'FP', 'FP2', 'Discr+FP', 'Discr+FP2', 'All
+#' @param ptype plot options: 'Discr', 'iRate', 'iRate2', 'Discr+iRate', 'Discr+iRate2', 'All
 #' @param point.size dot size in the plot (default = 2)
 #' 
 #' @return pdist: ggplot object of the distance matrix 
@@ -130,7 +163,7 @@ rex_plot.distance_field_map <- function(dFM.df, ptype, point.size=2){
       coord_equal() + theme(aspect.ratio=1) +
       theme_bw() 
   }
-  else if (ptype == 'FP'){
+  else if (ptype == 'iRate'){
     p <- ggplot(dFM.df,aes(.data$wD, .data$bD)) + 
       geom_point(aes(colour=.data$FPsub, fill = .data$FPsub), shape=21, size = point.size) + 
       scale_color_manual(breaks = c("Identified", "Not identified"), values = c('orangered2', 'grey10')) + 
@@ -144,7 +177,7 @@ rex_plot.distance_field_map <- function(dFM.df, ptype, point.size=2){
       coord_equal() + theme(aspect.ratio=1) +
       theme_bw() 
   }
-  else if (ptype == 'FP2'){
+  else if (ptype == 'iRate2'){
     p <- ggplot(dFM.df,aes(.data$wD, .data$bD)) + 
       geom_point(aes(colour=.data$FPwithin, fill = .data$FPwithin), shape=21, size = point.size) + 
       scale_color_manual(breaks = c("Identified", "Not identified"), values = c('orangered2', 'grey10')) + 
@@ -158,7 +191,7 @@ rex_plot.distance_field_map <- function(dFM.df, ptype, point.size=2){
       coord_equal() + theme(aspect.ratio=1) +
       theme_bw() 
   }
-  else if (ptype == 'Discr+FP'){
+  else if (ptype == 'Discr+iRate'){
     p <- ggplot(dFM.df,aes(.data$wD, .data$bD)) + 
       geom_point(aes(colour=.data$FPsub, fill = .data$FPsub), shape=21, size = point.size) + 
       geom_polygon(data = df_poly_above, aes('x','y'), fill = "red", alpha = .2) +
@@ -173,7 +206,7 @@ rex_plot.distance_field_map <- function(dFM.df, ptype, point.size=2){
       coord_equal() + theme(aspect.ratio=1) +
       theme_bw() 
   }
-  else if (ptype == 'Discr+FP2'){
+  else if (ptype == 'Discr+iRate2'){
     p <- ggplot(dFM.df,aes(.data$wD, .data$bD)) + 
       geom_point(aes(colour=.data$FPwithin, fill = .data$FPwithin), shape=21, size = point.size) + 
       geom_polygon(data = df_poly_above, aes(.data$x,.data$y), fill = "red", alpha = .2) +

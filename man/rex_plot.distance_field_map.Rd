@@ -9,7 +9,7 @@ rex_plot.distance_field_map(dFM.df, ptype, point.size = 2)
 \arguments{
 \item{dFM.df}{a datafrmae containing variables: distance, wD, bD}
 
-\item{ptype}{plot options: 'Discr', 'FP', 'FP2', 'Discr+FP', 'Discr+FP2', 'All}
+\item{ptype}{plot options: 'Discr', 'iRate', 'iRate2', 'Discr+iRate', 'Discr+iRate2', 'All}
 
 \item{point.size}{dot size in the plot (default = 2)}
 }

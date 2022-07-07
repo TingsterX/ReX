@@ -4,7 +4,7 @@
 \alias{lme_ICC_1wayR}
 \title{ICC (ICC1) calculation using 1-way Random model}
 \usage{
-lme_ICC_1wayR(data, subID, session, cov, shiny_progress_bar = FALSE)
+lme_ICC_1wayR(data, subID, session, cov = NULL, shiny_progress_bar = FALSE)
 }
 \arguments{
 \item{data}{[n, p]: a data matrix for n observations and p variables.}
@@ -13,7 +13,7 @@ lme_ICC_1wayR(data, subID, session, cov, shiny_progress_bar = FALSE)
 
 \item{session}{[n]: a vector containing the session (run, subsets, site, etc.)}
 
-\item{cov}{[n, m]: a covariance matrix for n observations and m variables}
+\item{cov}{[n, m]: a covariance matrix for n observations and m variables (default: NULL).}
 
 \item{shiny_progress_bar}{[1] a Boolean value - show the Shiny progress bar if this function is called in shiny app (library(shinybusy) is required)}
 }

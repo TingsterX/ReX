@@ -4,7 +4,7 @@
 \alias{lme_ICC_2wayM}
 \title{ICC (ICC3) calculation using 2-way Mixed model}
 \usage{
-lme_ICC_2wayM(data, subID, session, cov, shiny_progress_bar = FALSE)
+lme_ICC_2wayM(data, subID, session, cov = NULL, shiny_progress_bar = FALSE)
 }
 \arguments{
 \item{data}{[n, p]: a data matrix for n observations and p variables.}

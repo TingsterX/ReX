@@ -30,7 +30,7 @@
 #' @author Ting Xu
 #' @export
 lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
-  
+
   n <- dim(data)[1]
   p <- dim(data)[2]
   
@@ -46,6 +46,7 @@ lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   colnames(ICC) <- c("ICC", "ICCk", 
                      "sigma2_b", "sigma2_w", "var.data",
                      "error.message")
+  rownames(ICC) <- colnames(data)
   # show shiny progress bar if this function is called in shiny app
   if (shiny_progress_bar){ 
     show_modal_progress_line()
@@ -54,7 +55,7 @@ lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   # loop each variable 
   for (i in 1:p){
     # progress
-    if (i%%200==1) print(sprintf("Running LMM for %4.2f present ...", n/p*100))
+    if (i%%200==1) print(sprintf("Running LMM for %4.2f present ...", i/p*100))
     # show shiny progress bar
     if (shiny_progress_bar && i%%nprogress==1){update_modal_progress(i/p)}
     
@@ -79,7 +80,6 @@ lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   
   # shiny progress
   if (shiny_progress_bar){remove_modal_progress()}
-  
   return(ICC)
 }
 
@@ -136,6 +136,7 @@ lme_ICC_2wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   colnames(ICC) <- c("ICC.a", "ICC.c", "ICCk.a", "ICCk.c", 
                      "sigma2_b", "sigma2_w", "sigma2_rep", "var.data",
                      "error.message")
+  rownames(ICC) <- colnames(data)
   # model
   smodel <- "y ~ 1 + (1|session) + (1|subID)"
   for (a in colnames(cov)) smodel <- sprintf("%s + %s", smodel, a)
@@ -147,7 +148,7 @@ lme_ICC_2wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   }
   for (i in 1:p){
     # progress
-    if (i%%200==1) print(sprintf("Running LMM for %4.2f present ...", n/p*100))
+    if (i%%200==1) print(sprintf("Running LMM for %4.2f present ...", i/p*100))
     # show shiny progress bar
     if (shiny_progress_bar && i%%nprogress==1){update_modal_progress(i/p)}
     
@@ -226,7 +227,7 @@ lme_ICC_2wayM <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   colnames(ICC) <- c("ICC.c", "ICCk.c", 
                      "sigma2_b", "sigma2_w", "var.data",
                      "error.message") 
-  
+  rownames(ICC) <- colnames(data)
   # model
   smodel <- "y ~ 1 + session + (1|subID)"
   for (a in colnames(cov)) smodel <- sprintf("%s + %s", smodel, a)
@@ -239,7 +240,7 @@ lme_ICC_2wayM <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
   # loop each variable
   for (i in 1:p){
     # progress
-    if (i%%200==1) print(sprintf("Running LMM for %4.2f present ...", n/p*100))
+    if (i%%200==1) print(sprintf("Running LMM for %4.2f present ...", i/p*100))
     # show shiny progress bar
     if (shiny_progress_bar && i%%nprogress==1){update_modal_progress(i/p)}
     
