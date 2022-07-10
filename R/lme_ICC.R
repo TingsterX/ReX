@@ -30,9 +30,11 @@
 #' @author Ting Xu
 #' @export
 lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
-
+  data <- as.matrix(data)
   n <- dim(data)[1]
   p <- dim(data)[2]
+  subID <- as.matrix(subID,ncol=1); colnames(subID) <- "subID"
+  session <- as.matrix(session,ncol=1); colnames(session) <- "session"
   
   if (is.null((session)) || is.null((subID)) || n!=length(subID) || n!=length(session)) {
     stop('Invalid Input')
@@ -123,10 +125,12 @@ lme_ICC_1wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
 #' @export
 #' 
 lme_ICC_2wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
-  
+  data <- as.matrix(data)
   n <- dim(data)[1]
   p <- dim(data)[2]
-  
+  subID <- as.matrix(subID,ncol=1); colnames(subID) <- "subID"
+  session <- as.matrix(session,ncol=1); colnames(session) <- "session"
+
   if (is.null((session)) || is.null((subID)) || n!=length(subID) || n!=length(session)) {
     stop('Invalid Input')
   }
@@ -214,9 +218,11 @@ lme_ICC_2wayR <- function(data, subID, session, cov=NULL, shiny_progress_bar=FAL
 #' @export
 #' 
 lme_ICC_2wayM <- function(data, subID, session, cov=NULL, shiny_progress_bar=FALSE) {
-  
+  data <- as.matrix(data)
   n <- dim(data)[1]
   p <- dim(data)[2]
+  subID <- as.matrix(subID,ncol=1); colnames(subID) <- "subID"
+  session <- as.matrix(session,ncol=1); colnames(session) <- "session"
   
   if (is.null((session)) || is.null((subID)) || n!=length(subID) || n!=length(session)) {
     stop('Invalid Input')
