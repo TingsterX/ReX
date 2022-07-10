@@ -19,7 +19,6 @@ Imports:
     reshape2,
     colorspace,
     I2C2,
-    remotes,
     shinybusy
 Remotes: neuroconductor/I2C2
 Encoding: UTF-8
