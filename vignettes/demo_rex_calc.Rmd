@@ -1,0 +1,95 @@
+---
+title: "demo_rex_calc"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{demo_rex_calc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Reliability and variation analysis
+
+load in R packages: ReX, dplyr 
+```{r setup}
+library(ReX)
+library(dplyr)
+```
+
+For illustration, we only take 10 columns from the demo data as dependent variables. Check out the demo data, see ?ReX::demo_brain_trt
+```{r load_demo_data}
+# 62 observations includes 31 subjects and 2 visits per subject
+data <- as.matrix(demo_brain_trt[,5:14])
+subID <- as.matrix(demo_brain_trt %>% select("subID"))        
+session <- as.matrix(demo_brain_trt %>% select("visit"))         
+# age, gender as covariance 
+cov <- as.matrix(demo_brain_trt %>% select("age", "gender"))
+head(demo_brain_trt[1:5,1:8])
+```
+
+### Univariate reliability (reliability for each dependent variable separately)
+**Intraclass Correlation (ICC) model** will also estimate the inter- and intra-indivisual variations
+Note: a singular fit might occur when a random effect is estimated very close to zero or the collinearity is found in fixed effects. 
+Here, the demo data is a test-retest dataset
+```{r ICC_calculation}
+# One-way Random Model
+icc1 <- lme_ICC_1wayR(data, subID, session, cov)
+icc1
+# Two-way Random Model
+icc2 <- lme_ICC_2wayR(data, subID, session, cov)
+icc2
+# Two-way Mixed Model
+icc3 <- lme_ICC_2wayM(data, subID, session, cov)
+icc3
+```
+```{r}
+df_icc1 <- data.frame(icc1)
+# Default plotting configuration
+rex_plot.var.field(df_icc1, size.point = 4,  alpha.density = 0.3, color.point.fill = "red", color="red")
+```
+
+
+```{r discriminability}
+# Univariable Discriminability
+Discr_list <- discriminability_wraper(data, subID, session, all_discr.return=TRUE)
+# Discriminability for each dependent variable
+Discr_list$Discr
+# Discriminability for each observation and dependent variable
+head(Discr_list$DiscrSub)
+# Inspect the data
+rex_plot.discri_matrix(Discr_list$DiscrSub[,-c(1,2)], subID, session)
+```
+```{r IdentificationRate}
+# Univariable identification rate
+iRate_list <- fingerprinting_wraper(data, subID, session, method.dist = 'euclidean')
+# Identification Rate (fingerprinting) for each dependent variable
+iRate_list
+```
+
+### Multivariable reliability (reliability for all dependent variables together)
+```{r identification_rate}
+# All multivariable reliability are based on the distance matrix
+Dmax <- dist(data, method = "euclidean")
+
+# I2C2
+calc_i2c2(Dmax, subID, as.matrix(session))
+
+# dbICC
+calc_dbICC(Dmax, subID)
+
+# discriminability
+calc_discriminability(Dmax, subID)
+
+# identification rate (fingerprinting)
+calc_fingerprinting(Dmax, subID)
+
+# plot the distance space (red shade: discriminated observations, red dot: identified observation)
+dFM.df <- distance_field_map.df(Dmax, subID)
+rex_plot.distance_field_map(dFM.df, point.size = 2)
+```

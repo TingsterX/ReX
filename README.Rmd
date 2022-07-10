@@ -1,0 +1,135 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ReX 
+Reliability Explorer (ReX) - command line version
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/TingsterX/ReX/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/TingsterX/ReX/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+**ReX (Reliability Explorer)** is a R toolbox for calculating reliability and mapping individual variations to facilitate the assessment of reliability and reproducibility in neuroscience and psychology. This toolbox provides two modules.
+
+- Reliability Calculation module. This module implements parametric and nonparametric methods for univariate and multivariate reliability calculation including Intraclass correlation (ICC), distance-based ICC (dbICC), Image Intraclass Correlation Coefficient (I2C2), discriminability, and identification rate (i.e. fingerprinting). The results will be presented in a two-dimensional individual variation space (x-axis: within-individual variation, y-axis: between-individual variation) to facilitate understanding of individual difference and its relation to reliability assessment. The discriminability of each observation can be used to inspect your data and results. It will help to detect (1) which variable of interest has low reliablity, (2) which observation is a potential outliers.
+
+- Individual Comparison module. This module provides plotting function to visualize your results in the two-dimensional individual variation space. For the paired comparison, ReX can calculate the gradient flow map provides the normalized change of the within- and between-individual variation as compared to the most efficient direction for improving ICC, which helps to guide optimization efforts for measurement of individual differences. 
+
+See Shiny App version: https://github.com/TingsterX/Reliability_Explorer
+
+## Installation
+
+You can install the development version of ReX from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("TingsterX/ReX")
+```
+
+## Example - Reliability Calculation module
+
+This is a basic example which shows you how to calculate different types of reliability
+
+```{r example_data}
+library(ReX)
+# demo data is included in ReX
+head(demo_brain_trt[,1:8])
+```
+
+In this example, we only illustrate 20 dependent variables from the demo data here
+```{r}
+data <- as.matrix(demo_brain_trt[,5:24])
+subID <- as.matrix(demo_brain_trt[,"subID"])        
+session <- as.matrix(demo_brain_trt[,"visit"])         
+cov <- as.matrix(demo_brain_trt[,c("age", "gender")])
+```
+
+#### Univariable Reliability - Intraclass Correlation (ICC) and variation field map
+```{r ICC_exmaple}
+# Calculate the univariable Reliability: Demonstrate One-way Random Model based ICC
+df_icc <- data.frame(lme_ICC_1wayR(data, subID, session, cov))
+head(df_icc)
+# The within- and between-individual variation map
+rex_plot.var.field(df_icc, size.point = 4,  alpha.density = 0.3, color.point.fill = "red", color="red")
+```
+
+#### Univariable Reliability - Discriminability
+```{r discriminability}
+# Calculate the univariable Reliability Discriminability
+Discr_list <- discriminability_wraper(data, subID, session, all_discr.return=TRUE)
+# Discriminability for each dependent variable
+head(Discr_list$Discr)
+# Discriminability for each observation and dependent variable
+head(Discr_list$DiscrSub[1:6,1:6])
+# Inspect the Discriminability for each observation and dependent variable
+rex_plot.discri_matrix(Discr_list$DiscrSub[,-c(1,2)], subID, session)
+```
+
+
+#### Univariable Reliability - Identification Rate (Fingerprinting)
+```{r IdentificationRate}
+iRate_list <- fingerprinting_wraper(data, subID, session, method.dist = 'euclidean')
+head(iRate_list$FP)
+```
+
+
+#### Multivariable reliability (reliability for all dependent variables together)
+```{r multivariable_reliability}
+# All multivariable reliability are based on the distance matrix
+Dmax <- dist(data, method = "euclidean")
+
+# I2C2
+calc_i2c2(Dmax, subID, as.matrix(session))
+
+# dbICC
+calc_dbICC(Dmax, subID)
+
+# discriminability
+calc_discriminability(Dmax, subID)
+
+# identification rate (fingerprinting)
+calc_fingerprinting(Dmax, subID)
+
+# plot the distance space (red shade: discriminated observations, red dot: identified observation)
+dFM.df <- distance_field_map.df(Dmax, subID)
+rex_plot.distance_field_map(dFM.df, point.size = 2)
+```
+
+# Example - Individual Comparison module
+Demo data included in ReX: reliability and variation of brain connectivity preprocessed with and without global signal regression (GSR).
+```{r}
+# 62 observations includes 31 subjects and 2 visits per subject
+df_baseline <- demo_icc_noGSR
+df_target <- demo_icc_GSR
+df_paired <- cbind(df_baseline, df_target)
+# calculate the normalized changes of variation - gradient flow 
+df_VarPairedComp <- icc_gradient_flow(df_target[,"sigma2_w"], df_target[,"sigma2_b"], df_baseline[,"sigma2_w"], df_baseline[,"sigma2_b"])
+df_VarPairedComp$contrast <- "GSR - noGSR"
+rownames(df_VarPairedComp) <- df_paired$X
+head(df_VarPairedComp)
+```
+
+#### Change of the variation
+Change of the within- and between-individual variation: target (GSR) vs baseline (noGSR)
+```{r}
+rex_plot.var.change(df_VarPairedComp)
+```
+
+#### Normalized change of the variation - gradient flow
+Normalized (relative) change of the within- and between-individual variation: target (GSR) vs baseline (noGSR)
+```{r}
+rex_plot.icc.gradient.norm(df_VarPairedComp)
+# Hisgotram of normalized change of the variation - gradient flow: target vs baseline
+rex_plot.icc.gradient.hist(df_VarPairedComp)
+```

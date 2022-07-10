@@ -4,7 +4,7 @@
 \alias{rex_plot.distance_field_map}
 \title{plot distance field map}
 \usage{
-rex_plot.distance_field_map(dFM.df, ptype, point.size = 2)
+rex_plot.distance_field_map(dFM.df, ptype = "All", point.size = 2)
 }
 \arguments{
 \item{dFM.df}{a datafrmae containing variables: distance, wD, bD}

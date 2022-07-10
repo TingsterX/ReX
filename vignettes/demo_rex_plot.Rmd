@@ -1,0 +1,59 @@
+---
+title: "demo_rex_plot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{demo_rex_plot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Reliability and variation analysis
+
+load in R packages: ReX, dplyr 
+```{r setup}
+library(ReX)
+library(dplyr)
+```
+
+### load the variation 
+see ?ReX::demo_brain_trt for the details
+```{r load_demo_data}
+# load the icc and variation results as a baseline
+df_icc_baseline <- demo_icc_noGSR
+# load the icc and variation results as a target
+df_icc_target <- demo_icc_GSR
+
+
+# inspect the dataframe
+head(df_icc_baseline)
+head(df_icc_target)
+```
+
+### Plot the variation 
+```{r}
+# plot the intra- and inter-individual variation in the variation field 
+rex_plot.var.field(df_icc_baseline, plot.title="baseline", size.point = 3, color.point.fill = "seagreen", color="seagreen")
+rex_plot.var.field(df_icc_target, plot.title="target", size.point = 3, color.point.fill = "red", color="red")
+
+# merge the dataframe together
+df_icc_baseline$group <- "baseline"
+df_icc_target$group <- "target"
+df_merged <- rbind(df_icc_baseline, df_icc_target)
+# plot the intra- and inter-individual variation from two (or more) groups in the variation field 
+rex_plot.var.field.n(df_merged, group.name = "group", size.point = 2)
+```
+
+```{r}
+
+
+
+```
+

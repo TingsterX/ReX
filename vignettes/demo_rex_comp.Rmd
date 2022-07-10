@@ -1,0 +1,55 @@
+---
+title: "demo_rex_comp"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{demo_rex_comp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Compare the reliability and variations
+
+load in R packages: ReX, dplyr 
+```{r setup}
+library(ReX)
+library(dplyr)
+```
+
+**Example data:**: reliability and variation of brain connectivity preprocessed with global signal regression (GSR) and without.
+see ?ReX::demo_icc_GSR and ?ReX::demo_icc_noGSR
+```{r load_data}
+
+# 62 observations includes 31 subjects and 2 visits per subject
+df_baseline <- demo_icc_noGSR
+df_target <- demo_icc_GSR
+df_paired <- cbind(df_baseline, df_target)
+
+df_VarPairedComp <- icc_gradient_flow(df_target[,"sigma2_w"], df_target[,"sigma2_b"], df_baseline[,"sigma2_w"], df_baseline[,"sigma2_b"])
+df_VarPairedComp$contrast <- "GSR - noGSR"
+rownames(df_VarPairedComp) <- df_paired$X
+
+head(df_VarPairedComp)
+```
+
+### Change of the variation: target vs baseline
+```{r}
+rex_plot.var.change(df_VarPairedComp)
+```
+
+
+### Normalized (relative) change of the variation - gradient flow: target vs baseline
+```{r}
+rex_plot.icc.gradient.norm(df_VarPairedComp)
+```
+
+### Hisgotram of normalized (relative) change of the variation - gradient flow: target vs baseline
+```{r}
+rex_plot.icc.gradient.hist(df_VarPairedComp)
+```
