@@ -18,9 +18,9 @@ Imports:
     stats,
     reshape2,
     colorspace,
+    remotes,
     I2C2,
     shinybusy
-Remotes: neuroconductor/I2C2
 Encoding: UTF-8
 BugReports: https://github.com/TingsterX/reliability/issues
 LazyData: true
