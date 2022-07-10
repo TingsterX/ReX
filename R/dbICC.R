@@ -7,6 +7,11 @@
 #' @param sortdata a Boolean value - if sort the input data based on subID
 #' 
 #' @return distance-based intraclass correlation (dbICC)
+#' @examples 
+#' data <- demo_brain_trt[,5:10]
+#' subID <- as.matrix(demo_brain_trt$subID)
+#' calc_dbICC(dist(data), subID)
+#' 
 #' @note subID should match with the data (row)
 #' @references Meng Xu et al., 2021. Generalized reliability based on distances. Biometrics.https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7984087
 #' 
