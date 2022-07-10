@@ -129,7 +129,7 @@ rex_plot.sub_distance <- function(Dmax, subID, visit, gtitle='') {
 #' @references A Guide for Quantifying and Optimizing Measurement Reliability for the Study of Individual Differences. doi: https://doi.org/10.1101/2022.01.27.478100
 #' @author Ting XU
 #' @export
-rex_plot.distance_field_map <- function(dFM.df, ptype, point.size=2){
+rex_plot.distance_field_map <- function(dFM.df, ptype="All", point.size=2){
   # plot the distance field map
   # Input: distance_field_map.df(Dmax, subID)
   # x-axis: within-individual distance
