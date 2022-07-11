@@ -55,6 +55,10 @@ devtools::install_github("TingsterX/ReX")
 dplyr, lme4, ggplot2, RColorBrewer, scales, stats, reshape2, colorspace,
 [I2C2](https://github.com/neuroconductor/I2C2)
 
+``` r
+devtools::install_github("muschellij2/I2C2")
+```
+
 ## Example - Reliability Calculation module
 
 This is a basic example which shows you how to calculate different types

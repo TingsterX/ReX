@@ -18,7 +18,6 @@ Imports:
     stats,
     reshape2,
     colorspace,
-    remotes,
     I2C2,
     shinybusy
 Encoding: UTF-8
