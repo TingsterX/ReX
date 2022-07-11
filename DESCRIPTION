@@ -8,7 +8,7 @@ Date: 2022-06-01
 Author: Ting Xu <tingsterx@gmail.com>
 Maintainer: Ting Xu <tingsterx@gmail.com>
 Depends: R (>= 4.1.0)
-License: GPL (>= 2)
+License: GPL (>= 3)
 Imports:
     dplyr,
     lme4,
