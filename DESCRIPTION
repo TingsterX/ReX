@@ -20,6 +20,7 @@ Imports:
     colorspace,
     I2C2,
     shinybusy
+Remotes: muschellij2/I2C2
 Encoding: UTF-8
 BugReports: https://github.com/TingsterX/reliability/issues
 LazyData: true
