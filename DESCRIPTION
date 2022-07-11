@@ -20,6 +20,7 @@ Imports:
     colorspace,
     I2C2,
     shinybusy
+Remotes: neuroconductor/I2C2
 Encoding: UTF-8
 Language: en-US
 BugReports: https://github.com/TingsterX/reliability/issues
