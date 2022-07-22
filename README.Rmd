@@ -20,17 +20,40 @@ Reliability Explorer (ReX) - command line version
 [![R-CMD-check](https://github.com/TingsterX/ReX/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/TingsterX/ReX/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-**ReX (Reliability Explorer)** is a R toolbox for calculating reliability and mapping individual variations to facilitate the assessment of reliability and reproducibility in neuroscience and psychology. This toolbox provides two modules.
 
-- Reliability Calculation module. This module implements parametric and nonparametric methods for univariate and multivariate reliability calculation including Intraclass correlation (ICC), distance-based ICC (dbICC), Image Intraclass Correlation Coefficient (I2C2), discriminability, and identification rate (i.e. fingerprinting). The results will be presented in a two-dimensional individual variation space (x-axis: within-individual variation, y-axis: between-individual variation) to facilitate understanding of individual difference and its relation to reliability assessment. The discriminability of each observation can be used to inspect your data and results. It will help to detect (1) which variable of interest has low reliablity, (2) which observation is a potential outliers.
+**ReX (Reliability Explorer)** is a R toolbox for calculating
+reliability and mapping individual variations to facilitate the
+assessment of reliability and reproducibility in neuroscience and
+psychology. This toolbox provides two modules.
 
-- Individual Comparison module. This module provides plotting function to visualize your results in the two-dimensional individual variation space. For the paired comparison, ReX can calculate the gradient flow map provides the normalized change of the within- and between-individual variation as compared to the most efficient direction for improving ICC, which helps to guide optimization efforts for measurement of individual differences. 
+-   Reliability Calculation module. This module implements parametric
+    and nonparametric methods for univariate and multivariate
+    reliability calculation including Intraclass correlation (ICC),
+    distance-based ICC (dbICC), Image Intraclass Correlation Coefficient
+    (I2C2), discriminability, and identification rate
+    (i.e. fingerprinting). The results will be presented in a
+    two-dimensional individual variation space (x-axis:
+    within-individual variation, y-axis: between-individual variation)
+    to facilitate understanding of individual difference and its
+    relation to reliability assessment. The discriminability of each
+    observation can be used to inspect your data and results. It will
+    help to detect (1) which variable of interest has low
+    reliablity, (2) which observation is a potential outliers.
 
-See Shiny App version: https://github.com/TingsterX/Reliability_Explorer
+-   Individual Comparison module. This module provides plotting function
+    to visualize your results in the two-dimensional individual
+    variation space. For the paired comparison, ReX can calculate the
+    gradient flow map provides the normalized change of the within- and
+    between-individual variation as compared to the most efficient
+    direction for improving ICC, which helps to guide optimization
+    efforts for measurement of individual differences.
 
-## Installation
+See [**Tutorials**](https://github.com/TingsterX/Reliability_Explorer#tutorials) and Shiny App version:
+<https://github.com/TingsterX/Reliability_Explorer>
 
-You can install the development version of ReX from [GitHub](https://github.com/) with:
+## Installation ReX in R
+
+You can install the development version of ReX from GitHub with:
 
 ``` r
 # install.packages("devtools")
@@ -38,9 +61,33 @@ devtools::install_github("TingsterX/ReX")
 ```
 
 ## Dependency packages
-dplyr, lme4, ggplot2, RColorBrewer, scales, stats, reshape2, colorspace, [I2C2](https://github.com/neuroconductor/I2C2)
-``` r
-devtools::install_github("muschellij2/I2C2")
+
+dplyr, lme4, ggplot2, RColorBrewer, scales, stats, reshape2, colorspace,
+[I2C2](https://github.com/neuroconductor/I2C2)
+
+## Run ReX using docker
+
+#### Pull docker image
+
+```
+docker pull tingsterx/rex:1.0.0
+```
+
+#### Usage of command line in docker, run
+```
+docker run --rm \
+     -v /local/path/to/your/data:/input \
+     -v /local/path/to/your/output/:/output \
+     tingsterx/rex:1.0.0
+```
+The help messages and demo code are also [here](https://github.com/TingsterX/Reliability_Explorer/blob/main/rex_command_helper.md)
+
+#### Run R in docker
+```
+docker run -it --rm --entrypoint R \
+     -v /local/path/to/your/data:/input \
+     -v /local/path/to/your/output/:/output \
+     tingsterx/rex:1.0.0
 ```
 
 ## Example - Reliability Calculation module

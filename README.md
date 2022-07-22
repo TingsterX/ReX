@@ -37,13 +37,12 @@ psychology. This toolbox provides two modules.
     direction for improving ICC, which helps to guide optimization
     efforts for measurement of individual differences.
 
-See Shiny App version:
+See [**Tutorials**](https://github.com/TingsterX/Reliability_Explorer#tutorials) and Shiny App version:
 <https://github.com/TingsterX/Reliability_Explorer>
 
-## Installation
+## Installation ReX in R
 
-You can install the development version of ReX from
-[GitHub](https://github.com/) with:
+You can install the development version of ReX from GitHub with:
 
 ``` r
 # install.packages("devtools")
@@ -55,8 +54,29 @@ devtools::install_github("TingsterX/ReX")
 dplyr, lme4, ggplot2, RColorBrewer, scales, stats, reshape2, colorspace,
 [I2C2](https://github.com/neuroconductor/I2C2)
 
-``` r
-devtools::install_github("muschellij2/I2C2")
+## Run ReX using docker
+
+#### Pull docker image
+
+```
+docker pull tingsterx/rex:1.0.0
+```
+
+#### Usage of command line in docker, run
+```
+docker run --rm \
+     -v /local/path/to/your/data:/input \
+     -v /local/path/to/your/output/:/output \
+     tingsterx/rex:1.0.0
+```
+The help messages and demo code are also [here](https://github.com/TingsterX/Reliability_Explorer/blob/main/rex_command_helper.md)
+
+#### Run R in docker
+```
+docker run -it --rm --entrypoint R \
+     -v /local/path/to/your/data:/input \
+     -v /local/path/to/your/output/:/output \
+     tingsterx/rex:1.0.0
 ```
 
 ## Example - Reliability Calculation module
