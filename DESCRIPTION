@@ -3,7 +3,7 @@ Title: Reliability Explorer
 Description: Calculating and comparing the individual variation and reliability using 
               univariate and multivariate models including Intraclass Correlation (ICC), 
               distance-based ICC (dbICC), discriminability, and fingerprinting (identification rate).
-Version: 1.0.0
+Version: 1.0.1
 Date: 2022-06-01
 Author: Ting Xu <tingsterx@gmail.com>
 Maintainer: Ting Xu <tingsterx@gmail.com>
