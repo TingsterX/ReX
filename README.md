@@ -60,14 +60,14 @@ dplyr, lme4, ggplot2, RColorBrewer, scales, stats, reshape2, colorspace,
 
 #### Pull docker image
 
-    docker pull tingsterx/rex:1.0.0
+    docker pull tingsterx/rex:latest
 
 #### Usage of command line in docker, run
 
     docker run --rm \
          -v /local/path/to/your/data:/input \
          -v /local/path/to/your/output/:/output \
-         tingsterx/rex:1.0.0
+         tingsterx/rex:latest
 
 The help messages and demo code are also
 [here](https://github.com/TingsterX/Reliability_Explorer/blob/main/rex_command_helper.md)
@@ -77,7 +77,7 @@ The help messages and demo code are also
     docker run -it --rm --entrypoint R \
          -v /local/path/to/your/data:/input \
          -v /local/path/to/your/output/:/output \
-         tingsterx/rex:1.0.0
+         tingsterx/rex:latest
 
 ## Example - Reliability Calculation module
 
