@@ -106,12 +106,29 @@ atan2_2pi <- function(y, x){
 #' 
 discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean", all_discr.return=TRUE, shiny_progress_bar=FALSE) {
   # data: dataframe or matrix, sID: dataframe, visit: dataframe 
+  #
+  n_complete <- dim(data)[1]
+  # deal with missing data (NA) in data (remove NA)
+  idx_complete <- complete.cases
+  if (all(idx_complete)){ 
+    print("Warning: missing data (NA) exist and is removed in the Discriminability calculation")
+    if (all_discr.return){
+      df.discr_sub_comp <- data.frame(array(NA, dim=c(n_complete,p)))
+      colnames(df.discr_sub_comp) <- colnames(data)
+      df.rep_comp <- cbind(sID, visit)
+    }
+    # remove the NA data - listwise
+    data <- data[complete.cases(data),]
+  }
+  
+  #
   n <- dim(data)[1]
   p <- dim(data)[2]
   
   if ( is.null((sID[,1])) || n!=length(sID[,1]) ) {
     stop('Invalid Input')
   }
+  
   df.discr <- data.frame(array(0, dim=c(p,1)))
   colnames(df.discr) <- "discriminability"
   rownames(df.discr) <- colnames(data)
@@ -134,14 +151,23 @@ discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean",
     D <- dist(data[,i], method = method.dist)
     d <- discr.discr(discr.rdf(as.matrix(D), sID[,1]), all_discr.return=all_discr.return)
     df.discr[i,1] <- d[[1]]
-    if (all_discr.return) df.discr_sub[,i] <- d[[2]]
+    if (all_discr.return) {
+      df.discr_sub[,i] <- d[[2]]
+      }
   }
   
   # shiny progress
   if (shiny_progress_bar){remove_modal_progress()}
   
   if (all_discr.return){
-    df.discr_sub <- cbind(df.rep, df.discr_sub)
+    if (all(idx_complete)){ 
+      df.discr_sub_comp[idx_complete,] <- df.discr_sub
+      df.discr_sub_comp <- cbind(df.rep_comp, df.discr_sub_comp)
+    } 
+    else {
+      df.discr_sub_comp <- df.discr_sub
+      df.discr_sub_comp <- cbind(df.rep, df.discr_sub_comp)
+    }
     out_list <- list(df.discr, df.discr_sub)
     names(out_list) <- c("Discr", "DiscrSub")
   }
