@@ -91,8 +91,8 @@ atan2_2pi <- function(y, x){
 #' 
 #' 
 #' @param data [n x p] data matrix: n observations x p variables
-#' @param sID [n] a vector containing subject ID
-#' @param visit [n] a vector containing the repetition identify (e.g. time1, time2)
+#' @param sID [n x 1] a dataframe containing subject ID
+#' @param visit [n x 1] a dataframe containing the repetition identify (e.g. time1, time2)
 #' @param method.dist [1] a character indicating which method is used to calcualte the distance (Default: euclidean). Check \code{dist}
 #' @param all_discr.return [1] a boolean value - if return the discriminability for each observation (Default: TRUE)
 #' @param shiny_progress_bar [1] a boolean value - show the Shiny progress bar if this function is called in shiny app (shinybusy library is required)
@@ -107,28 +107,34 @@ atan2_2pi <- function(y, x){
 discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean", all_discr.return=TRUE, shiny_progress_bar=FALSE) {
   # data: dataframe or matrix, sID: dataframe, visit: dataframe 
   #
-  n_complete <- dim(data)[1]
+  
+  n_all <- dim(data)[1]
+  p <- dim(data)[2]
+  
+  if ( is.null((sID[,1])) || n_all!=length(sID[,1]) ) {
+    stop('Invalid Input')
+  }
+  
   # deal with missing data (NA) in data (remove NA)
-  idx_complete <- complete.cases
-  if (all(idx_complete)){ 
+  df.rep_comp <- cbind(sID, visit)
+  sID_comp <- sID
+  idx_complete <- complete.cases(data)
+  idx_not_complete <- !complete.cases(data)
+  if (any(idx_not_complete)){ 
     print("Warning: missing data (NA) exist and is removed in the Discriminability calculation")
     if (all_discr.return){
-      df.discr_sub_comp <- data.frame(array(NA, dim=c(n_complete,p)))
+      df.discr_sub_comp <- data.frame(array(0, dim=c(n_all,p)))
       colnames(df.discr_sub_comp) <- colnames(data)
-      df.rep_comp <- cbind(sID, visit)
+      df.discr_sub_comp[!idx_complete,] <- NA
     }
     # remove the NA data - listwise
-    data <- data[complete.cases(data),]
+    data <- data.frame(data[idx_complete,])
+    sID <- sID[idx_complete,]
   }
   
   #
   n <- dim(data)[1]
-  p <- dim(data)[2]
-  
-  if ( is.null((sID[,1])) || n!=length(sID[,1]) ) {
-    stop('Invalid Input')
-  }
-  
+
   df.discr <- data.frame(array(0, dim=c(p,1)))
   colnames(df.discr) <- "discriminability"
   rownames(df.discr) <- colnames(data)
@@ -136,7 +142,6 @@ discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean",
   if (all_discr.return){
     df.discr_sub <- data.frame(array(0, dim=c(n,p)))
     colnames(df.discr_sub) <- colnames(data)
-    df.rep <- cbind(sID, visit)
   }
   
   # shiny progress 
@@ -151,23 +156,19 @@ discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean",
     D <- dist(data[,i], method = method.dist)
     d <- discr.discr(discr.rdf(as.matrix(D), sID[,1]), all_discr.return=all_discr.return)
     df.discr[i,1] <- d[[1]]
-    if (all_discr.return) {
-      df.discr_sub[,i] <- d[[2]]
-      }
+    if (all_discr.return) df.discr_sub[,i] <- d[[2]]
   }
   
   # shiny progress
   if (shiny_progress_bar){remove_modal_progress()}
   
   if (all_discr.return){
-    if (all(idx_complete)){ 
+    if (any(idx_not_complete)){ 
       df.discr_sub_comp[idx_complete,] <- df.discr_sub
-      df.discr_sub_comp <- cbind(df.rep_comp, df.discr_sub_comp)
-    } 
-    else {
+    } else {
       df.discr_sub_comp <- df.discr_sub
-      df.discr_sub_comp <- cbind(df.rep, df.discr_sub_comp)
     }
+    df.discr_sub_comp <- cbind(df.rep_comp, df.discr_sub_comp)
     out_list <- list(df.discr, df.discr_sub)
     names(out_list) <- c("Discr", "DiscrSub")
   }
@@ -184,8 +185,8 @@ discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean",
 #' 
 #' 
 #' @param data [n x p] data matrix: n observations x p variables
-#' @param sID [n] a vector containing subject ID
-#' @param visit [n] a vector containing the repetition identify (e.g. time1, time2)
+#' @param sID [n x 1] a data frame containing subject ID
+#' @param visit [n x 1] a data frame containing the repetition identify (e.g. time1, time2)
 #' @param method.dist [1] a character value indicating the method to calculate the distance matrix (default: "euclidean"), check \code{dist}
 #' @param method.FP [1] a numeric value indicating which method used to count the identification rate (default: 1). Check \code{calc_fingerprinting}
 #' @param shiny_progress_bar [1] a Boolean value - show the Shiny progress bar if this function is called in shiny app (shinybusy library is required)
@@ -199,13 +200,27 @@ discriminability_wraper <- function(data, sID, visit, method.dist = "euclidean",
 fingerprinting_wraper <- function(data, sID, visit, method.dist = "euclidean", method.FP=1, shiny_progress_bar=FALSE) {
   # data: dataframe or matrix, sID: dataframe, visit: dataframe 
   
-  n <- dim(data)[1]
+  n_all <- dim(data)[1]
   p <- dim(data)[2]
   
-  if ( is.null((sID[,1])) || n!=length(sID[,1]) ) {
+  if ( is.null((sID[,1])) || n_all!=length(sID[,1]) ) {
     stop('Invalid Input')
   }
   
+  # deal with missing data (NA) in data (remove NA)
+  df.rep_comp <- cbind(sID, visit)
+  sID_comp <- sID
+  idx_complete <- complete.cases(data)
+  idx_not_complete <- !complete.cases(data)
+  if (any(idx_not_complete)){ 
+    print("Warning: missing data (NA) exist and is removed in the Discriminability calculation")
+    # remove the NA data - listwise
+    data <- data.frame(data[idx_complete,])
+    sID <- sID[idx_complete,]
+  }
+
+  n <- dim(data)[1]
+
   df.FP <- data.frame(array(0, dim=c(p,1)))
   colnames(df.FP) <- "fingerprinting"
   rownames(df.FP) <- colnames(data)
@@ -240,8 +255,8 @@ fingerprinting_wraper <- function(data, sID, visit, method.dist = "euclidean", m
 #' 
 #' 
 #' @param data [n x p] data matrix: n observations x p variables
-#' @param sID [n] a vector containing subject ID
-#' @param visit [n] a vector containing the repetition identify (e.g. time1, time2)
+#' @param sID [n x 1] a data frame containing subject ID
+#' @param visit [n x 1] a data frame containing the repetition identify (e.g. time1, time2)
 #' @param method.dist method to calculate the distance matrix (default: "euclidean")
 #' @param all_discr.return return the discriminability for each observation/repetition 
 #' @param method.FP a numeric value indicating which method used to count the identification rate (default: 1). Check \code{calc_fingerprinting}
@@ -255,51 +270,71 @@ fingerprinting_wraper <- function(data, sID, visit, method.dist = "euclidean", m
 #' 
 Discr_and_FP_wraper <- function(data, sID, visit, method.dist = "euclidean", all_discr.return=TRUE, method.FP=1, shiny_progress_bar=FALSE) {
   # data: dataframe or matrix, sID: dataframe, visit: dataframe 
+  #
   
-  n <- dim(data)[1]
+  n_all <- dim(data)[1]
   p <- dim(data)[2]
   
-  if ( is.null((sID[,1])) || n!=length(sID[,1]) ) {
+  if ( is.null((sID[,1])) || n_all!=length(sID[,1]) ) {
     stop('Invalid Input')
   }
+  
+  # deal with missing data (NA) in data (remove NA)
+  df.rep_comp <- cbind(sID, visit)
+  sID_comp <- sID
+  idx_complete <- complete.cases(data)
+  idx_not_complete <- !complete.cases(data)
+  if (any(idx_not_complete)){ 
+    print("Warning: missing data (NA) exist and is removed in the Discriminability calculation")
+    if (all_discr.return){
+      df.discr_sub_comp <- data.frame(array(0, dim=c(n_all,p)))
+      colnames(df.discr_sub_comp) <- colnames(data)
+      df.discr_sub_comp[!idx_complete,] <- NA
+    }
+    # remove the NA data - listwise
+    data <- data.frame(data[idx_complete,])
+    sID <- sID[idx_complete,]
+  }
+  
+  #
+  n <- dim(data)[1]
+  
   df.discr <- data.frame(array(0, dim=c(p,1)))
   colnames(df.discr) <- "discriminability"
   rownames(df.discr) <- colnames(data)
-  df.FP <- data.frame(array(0, dim=c(p,1)))
-  colnames(df.FP) <- "fingerprinting"
-  rownames(df.FP) <- colnames(data)
   
   if (all_discr.return){
     df.discr_sub <- data.frame(array(0, dim=c(n,p)))
     colnames(df.discr_sub) <- colnames(data)
-    df.rep <- cbind(sID, visit)
   }
   
   # shiny progress 
   if (shiny_progress_bar){ 
-  show_modal_progress_line()
-  if (p<100) nprogress <- max(1,floor(p/10)) else nprogress <- 100
+    show_modal_progress_line()
+    if (p<100) nprogress <- max(1,floor(p/10)) else nprogress <- 100
   }
-  # 
   for (i in 1:p){
     # shiny progress update
-    if (shiny_progress_bar && i%%nprogress==1){update_modal_progress(i/p)}
+    if (shiny_progress_bar && i%%nprogress==1) update_modal_progress(i/p)
     
     D <- dist(data[,i], method = method.dist)
-    # Discriminability
     d <- discr.discr(discr.rdf(as.matrix(D), sID[,1]), all_discr.return=all_discr.return)
     df.discr[i,1] <- d[[1]]
     if (all_discr.return) df.discr_sub[,i] <- d[[2]]
     # Fingerprinting
     df.FP[i,1]  <- calc_fingerprinting(D, sID[,1], method=method.FP)
-    
   }
   
   # shiny progress
   if (shiny_progress_bar){remove_modal_progress()}
   
   if (all_discr.return){
-    df.discr_sub <- cbind(df.rep, df.discr_sub)
+    if (any(idx_not_complete)){ 
+      df.discr_sub_comp[idx_complete,] <- df.discr_sub
+    } else {
+      df.discr_sub_comp <- df.discr_sub
+    }
+    df.discr_sub_comp <- cbind(df.rep_comp, df.discr_sub_comp)
     out_list <- list(df.discr, df.discr_sub, df.FP)
     names(out_list) <- c("Discr", "DiscrSub", "FP")
   }
