@@ -262,3 +262,10 @@ rex_plot.icc.gradient.hist(df_VarPairedComp)
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
+
+#### version note
+
+v1.0.0 July 10 2022 v1.0.1 Sep 20 2020 - fix bug - If input data
+contains NA in Discriminability/Fingerprinting calculation (listwise
+delete) - fix bug - If input data contains \>2 visits per subject in
+Discriminability/Fingerprinting calculation
