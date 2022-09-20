@@ -119,7 +119,7 @@ head(df_icc)
 #> ROI.1 0.20704401 0.34305959 0.005238936 0.02006455 0.02537167             0
 #> ROI.2 0.04698971 0.08976155 0.001015134 0.02058820 0.02127059             0
 #> ROI.3 0.64010940 0.78056915 0.018732651 0.01053211 0.02594836             0
-#> ROI.4 0.39197005 0.56318748 0.008752628 0.01357721 0.02105680             0
+#> ROI.4 0.39197004 0.56318747 0.008752628 0.01357721 0.02105680             0
 #> ROI.5 0.31462057 0.47864848 0.007041670 0.01533980 0.02380350             0
 #> ROI.6 0.29384289 0.45421726 0.005162441 0.01240627 0.01862917             0
 # The within- and between-individual variation map
@@ -133,6 +133,8 @@ rex_plot.var.field(df_icc, size.point = 4,  alpha.density = 0.3, color.point.fil
 ``` r
 # Calculate the univariable Reliability Discriminability
 Discr_list <- discriminability_wraper(data, subID, session, all_discr.return=TRUE)
+#> [1] 62
+#> [1] 2
 # Discriminability for each dependent variable
 head(Discr_list$Discr)
 #>       discriminability
@@ -144,15 +146,15 @@ head(Discr_list$Discr)
 #> ROI.6        0.5252688
 # Discriminability for each observation and dependent variable
 head(Discr_list$DiscrSub[1:6,1:6])
-#>        1     2     ROI.1      ROI.2     ROI.3     ROI.4
-#> 1 sub001 time1 0.4666667 0.43333333 0.9500000 0.4166667
-#> 2 sub001 time2 0.6333333 0.13333333 0.9666667 0.7500000
-#> 3 sub002 time1 0.5666667 0.31666667 0.6000000 0.9000000
-#> 4 sub002 time2 0.4666667 0.01666667 0.4000000 0.8833333
-#> 5 sub003 time1 0.6666667 0.93333333 0.6500000 0.8833333
-#> 6 sub003 time2 0.5666667 0.90000000 0.5333333 0.8833333
+#>    subID   combination     ROI.1      ROI.2     ROI.3     ROI.4
+#> 1 sub001 time1_x_time2 0.4666667 0.43333333 0.9500000 0.4166667
+#> 2 sub001 time2_x_time1 0.6333333 0.13333333 0.9666667 0.7500000
+#> 3 sub002 time1_x_time2 0.5666667 0.31666667 0.6000000 0.9000000
+#> 4 sub002 time2_x_time1 0.4666667 0.01666667 0.4000000 0.8833333
+#> 5 sub003 time1_x_time2 0.6666667 0.93333333 0.6500000 0.8833333
+#> 6 sub003 time2_x_time1 0.5666667 0.90000000 0.5333333 0.8833333
 # Inspect the Discriminability for each observation and dependent variable
-rex_plot.discri_matrix(Discr_list$DiscrSub[,-c(1,2)], subID, session)
+rex_plot.discri_matrix(Discr_list$DiscrSub[,-c(1,2)], Discr_list$DiscrSub[,1], Discr_list$DiscrSub[,2])
 ```
 
 <img src="man/figures/README-discriminability-1.png" width="100%" />

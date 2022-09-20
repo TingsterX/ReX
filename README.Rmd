@@ -126,7 +126,7 @@ head(Discr_list$Discr)
 # Discriminability for each observation and dependent variable
 head(Discr_list$DiscrSub[1:6,1:6])
 # Inspect the Discriminability for each observation and dependent variable
-rex_plot.discri_matrix(Discr_list$DiscrSub[,-c(1,2)], subID, session)
+rex_plot.discri_matrix(Discr_list$DiscrSub[,-c(1,2)], Discr_list$DiscrSub[,1], Discr_list$DiscrSub[,2])
 ```
 
 
