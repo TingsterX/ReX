@@ -314,12 +314,36 @@ Discr_and_FP_wraper <- function(data, sID, visit, method.dist = "euclidean", all
   #
   n <- dim(data)[1]
   
+  # the combination of within-sub n_repx
+  uniqids <- unique(as.character(sID[,1]))
+  countvec <- vector(mode="numeric",length=length(uniqids))
+  for (i in 1:length(uniqids)) {
+    countvec[i] <- sum(uniqids[i] == sID[,1]) # total number of scans for the particular id
+  }
+  scans <- max(countvec) # assume that we will worst case have the most
+  print(n)
+  print(scans)
+  df.repx <- data.frame(subID=vector(mode="character", length=n*(scans-1)),
+                        combination=vector(mode="character", length=n*(scans-1))) # initialize empty dataframe
+  count <- 1
+  for (i in 1:n) {
+    ind <- which(sID[i,1] == sID[,1]) # all the indices that are the same subject, but different scan
+    for (j in ind) {
+      if (!isTRUE(all.equal(j, i))) { 
+        df.repx$subID[count] <- sprintf("%s", sID[i,1]) 
+        df.repx$combination[count] <- sprintf("%s_x_%s", visit[i,1], visit[j,1]) 
+        count <-  count + 1
+      }
+    }
+  }
+  df.repx <- df.repx[1:count-1,] 
+  
   df.discr <- data.frame(array(0, dim=c(p,1)))
   colnames(df.discr) <- "discriminability"
   rownames(df.discr) <- colnames(data)
   
   if (all_discr.return){
-    df.discr_sub <- data.frame(array(0, dim=c(n,p)))
+    df.discr_sub <- data.frame(array(0, dim=c(dim(df.repx)[1],p)))
     colnames(df.discr_sub) <- colnames(data)
   }
   
@@ -344,12 +368,7 @@ Discr_and_FP_wraper <- function(data, sID, visit, method.dist = "euclidean", all
   if (shiny_progress_bar){remove_modal_progress()}
   
   if (all_discr.return){
-    if (any(idx_not_complete)){ 
-      df.discr_sub_comp[idx_complete,] <- df.discr_sub
-    } else {
-      df.discr_sub_comp <- df.discr_sub
-    }
-    df.discr_sub_comp <- cbind(df.rep_comp, df.discr_sub_comp)
+    df.discr_sub <- cbind(df.repx, df.discr_sub)
     out_list <- list(df.discr, df.discr_sub, df.FP)
     names(out_list) <- c("Discr", "DiscrSub", "FP")
   }
