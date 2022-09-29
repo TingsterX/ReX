@@ -20,7 +20,7 @@
 calc_dbICC <- function(dmax, subID, sortdata=TRUE) {
   # calculate the dbICC
   # convert the long format distance to matrix
-  dmax <- as.matrix(dmax)
+  dmax <- as.matrix(dmax^2)
   # check the dimension
   if (length(subID) != dim(dmax)[1]){
     stop('check data: the number of subID and the dimension of distance matrix is not matched')
