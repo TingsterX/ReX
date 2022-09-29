@@ -17,7 +17,7 @@
 #' 
 #' @author Ting Xu modified from https://github.com/wtagr/dbicc
 #' @export
-calc_dbICC <- function(dmax, subID, sortdata=TRUE) {
+calc_dbICC <- function(dmax, subID, sortdata=TRUE, return_var=FALSE) {
   # calculate the dbICC
   # convert the long format distance to matrix
   dmax <- as.matrix(dmax^2)
@@ -48,5 +48,12 @@ calc_dbICC <- function(dmax, subID, sortdata=TRUE) {
   bmask[bmask == 0] <- NA
   
   dbicc <- 1 - mean(dmax * wmask, na.rm = TRUE) / mean(dmax * bmask, na.rm = TRUE)
-  return(dbicc)
+  if (return_var){
+    varw <- 0.5*mean(dmax * wmask, na.rm = TRUE)
+    varb <- 0.5*mean(dmax * bmask, na.rm = TRUE) - varw
+    return(list(dbicc, varw, varb)) 
+  }
+  else {
+    return(dbicc)
+  }
 }
