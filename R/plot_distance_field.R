@@ -100,8 +100,12 @@ rex_plot.sub_distance <- function(Dmax, subID, visit, gtitle='') {
   # Output matrix will be ordered
   xmin <- min(Dmax[Dmax>0])
   xmax <- max(Dmax)
+  # reorder
+  Dmax <- as.matrix(Dmax)
+  Dmax <- Dmax[order(subID, visit),order(subID, visit)]
+  colnames(Dmax) <- paste0(subID,".",visit)
+  rownames(Dmax) <- paste0(subID,".",visit)
   data <- reshape2::melt(as.matrix(Dmax), c("x", "y"), value.name = "distance")
-  data$x <- paste0(subID,".",visit)
   pdist <- ggplot(data = data, aes(x=.data$y, y=.data$x, fill=.data$distance)) + 
     geom_tile(color="grey") +
     scale_fill_gradientn(colours=c("white", "red"), name="distance", limits=c(xmin, xmax)) +
