@@ -4,7 +4,8 @@
 #' 
 #' @param dmax [n, n]: a distance matrix for n observations 
 #' @param subID [n]: a vector containing the subject IDs
-#' @param sortdata a Boolean value - if sort the input data based on subID
+#' @param sortdata: a Boolean value - if sort the input data based on subID
+#' @param return_var: a Boolean value - if return the within and between individual variance (default=TRUE)
 #' 
 #' @return distance-based intraclass correlation (dbICC)
 #' @examples 
@@ -17,7 +18,7 @@
 #' 
 #' @author Ting Xu modified from https://github.com/wtagr/dbicc
 #' @export
-calc_dbICC <- function(dmax, subID, sortdata=TRUE, return_var=FALSE) {
+calc_dbICC <- function(dmax, subID, sortdata=TRUE, return_var=TRUE) {
   # calculate the dbICC
   # convert the long format distance to matrix
   dmax <- as.matrix(dmax^2)
@@ -49,9 +50,11 @@ calc_dbICC <- function(dmax, subID, sortdata=TRUE, return_var=FALSE) {
   
   dbicc <- 1 - mean(dmax * wmask, na.rm = TRUE) / mean(dmax * bmask, na.rm = TRUE)
   if (return_var){
-    varw <- 0.5*mean(dmax * wmask, na.rm = TRUE)
-    varb <- 0.5*mean(dmax * bmask, na.rm = TRUE) - varw
-    return(list(dbicc, varw, varb)) 
+    var_w <- 0.5*mean(dmax * wmask, na.rm = TRUE)
+    var_b <- 0.5*mean(dmax * bmask, na.rm = TRUE) - var_w
+    out <- list(dbicc, var_w, var_b)
+    names(out) <- c("dbicc", "var_w", "var_b")
+    return(out) 
   }
   else {
     return(dbicc)
