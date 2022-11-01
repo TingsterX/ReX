@@ -16,9 +16,9 @@ fingerprinting_wraper(
 \arguments{
 \item{data}{[n x p] data matrix: n observations x p variables}
 
-\item{sID}{[n] a vector containing subject ID}
+\item{sID}{[n x 1] a data frame containing subject ID}
 
-\item{visit}{[n] a vector containing the repetition identify (e.g. time1, time2)}
+\item{visit}{[n x 1] a data frame containing the repetition identify (e.g. time1, time2)}
 
 \item{method.dist}{[1] a character value indicating the method to calculate the distance matrix (default: "euclidean"), check \code{dist}}
 
