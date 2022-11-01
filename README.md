@@ -185,7 +185,14 @@ calc_i2c2(Dmax, subID, as.matrix(session))
 
 # dbICC
 calc_dbICC(Dmax, subID)
-#> [1] 0.1913023
+#> $dbicc
+#> [1] 0.3557867
+#> 
+#> $var_w
+#> [1] 0.2915027
+#> 
+#> $var_b
+#> [1] 0.1609914
 
 # discriminability
 calc_discriminability(Dmax, subID)
@@ -267,9 +274,10 @@ rex_plot.icc.gradient.hist(df_VarPairedComp)
 
 v1.0.0 - July 10 2022
 
-v1.0.1 - Sep 20 2020
+v1.0.1 - Oct 30 2022
 
 -   fix bug: If input data contains NA in
     Discriminability/Fingerprinting calculation (listwise delete)
 -   fix bug: If input data contains \>2 visits per subject in
     Discriminability/Fingerprinting calculation
+-   add dbICC based within- and between-individual variation
