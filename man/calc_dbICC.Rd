@@ -11,9 +11,9 @@ calc_dbICC(dmax, subID, sortdata = TRUE, return_var = TRUE)
 
 \item{subID}{[n]: a vector containing the subject IDs}
 
-\item{sortdata:}{a Boolean value - if sort the input data based on subID}
+\item{sortdata}{: a Boolean value - if sort the input data based on subID}
 
-\item{return_var:}{a Boolean value - if return the within and between individual variance (default=TRUE)}
+\item{return_var}{: a Boolean value - if return the within and between individual variance (default=TRUE)}
 }
 \value{
 distance-based intraclass correlation (dbICC)
