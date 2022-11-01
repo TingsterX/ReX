@@ -4,8 +4,8 @@
 #' 
 #' @param dmax [n, n]: a distance matrix for n observations 
 #' @param subID [n]: a vector containing the subject IDs
-#' @param sortdata: a Boolean value - if sort the input data based on subID
-#' @param return_var: a Boolean value - if return the within and between individual variance (default=TRUE)
+#' @param sortdata : a Boolean value - if sort the input data based on subID
+#' @param return_var : a Boolean value - if return the within and between individual variance (default=TRUE)
 #' 
 #' @return distance-based intraclass correlation (dbICC)
 #' @examples 
